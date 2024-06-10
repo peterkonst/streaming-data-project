@@ -4,8 +4,6 @@ from dotenv import load_dotenv
 import pytest
 from requests.exceptions import HTTPError
 
-
-# Load environment variables from .env file
 load_dotenv()
 
 @pytest.mark.parametrize("search_term, date_from, expected_count", [

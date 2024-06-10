@@ -26,7 +26,7 @@ def get_guardian_articles(api_key, search_term, date_from=None):
 def publish_to_kafka(topic, articles):
     producer = KafkaProducer(
         bootstrap_servers='localhost:9092',
-        value_serialiser=lambda v: json.dumps(v).encode('utf-8')
+        value_serializer=lambda v: json.dumps(v).encode('utf-8')
     )
     for article in articles:
         producer.send(topic, article)
@@ -34,7 +34,7 @@ def publish_to_kafka(topic, articles):
 
 if __name__ == "__main__":
     topic = 'guardian_content'
-    create_kafka_topic(topic)  # Ensure topic is created
+    create_kafka_topic(topic)
 
     api_key = os.getenv('GUARDIAN_API_KEY')
     articles = get_guardian_articles(api_key=api_key, search_term='machine learning', date_from='2023-01-01')
