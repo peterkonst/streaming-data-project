@@ -3,7 +3,7 @@ import requests
 import json
 from dotenv import load_dotenv
 from kafka import KafkaProducer
-from setup_kafka import create_kafka_topic
+from producer_consumer.setup_kafka import create_kafka_topic
 
 load_dotenv()
 

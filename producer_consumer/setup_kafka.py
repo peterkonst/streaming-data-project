@@ -18,4 +18,3 @@ def create_kafka_topic(topic_name, num_partitions=1, replication_factor=1):
 if __name__ == "__main__":
     topic = 'guardian_content'
     create_kafka_topic(topic)
-
