@@ -38,6 +38,11 @@ This project is a proof of concept for a streaming data application that retriev
     AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
     AWS_DEFAULT_REGION=your_aws_region
     ```
+5. Download and set up terraform:
+    ``` bash
+    terraform init
+    terraform plan
+    terraform apply
 ## Usage
 
 1. Producer:
