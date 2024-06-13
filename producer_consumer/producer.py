@@ -12,6 +12,7 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 
 def get_guardian_articles(api_key, search_term, date_from=None):
+    
     url = "https://content.guardianapis.com/search"
     params = {
         'q': search_term,
