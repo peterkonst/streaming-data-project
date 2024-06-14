@@ -12,6 +12,24 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 
 def get_guardian_articles(api_key, search_term, date_from=None):
+    """
+    Fetches articles from The Guardian API based on their search criteria.
+
+    Args:
+    - api_key(str): API key for accessing The Guardian API.
+    - search_term (str): Term to search for in article content.
+    - date_from (str, optional): Start date for filtering articles.
+
+    Returns:
+    - list: List of articles fetched from the API. Each article is a dictionary.
+
+    Raises:
+    - requests.RequestsException: If an occurs during the API request.
+
+    Notes:
+    - Retrieves up to 10 articles per request.
+    - Adds a 'content_preview' field to each article containing the first 1000 characters of the article body.
+    """
     
     url = "https://content.guardianapis.com/search"
     params = {

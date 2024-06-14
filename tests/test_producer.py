@@ -6,6 +6,8 @@ from unittest.mock import patch, MagicMock
 from producer_consumer.producer import get_guardian_articles, publish_to_kinesis
 import boto3
 from moto import mock_aws
+from botocore.exceptions import ClientError
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -50,6 +52,32 @@ def test_get_guardian_articles_failure(mock_get, mock_env_variables):
 
     api_key = os.getenv('GUARDIAN_API_KEY')
     articles = get_guardian_articles(api_key, 'machine learning', '2023-01-01')
+
+    assert len(articles) == 0
+
+@patch('requests.get')
+def test_get_guardian_articles_invalid_api_key(mock_get, mock_env_variables):
+    mock_response = MagicMock()
+    mock_response.status_code = 403
+    mock_get.return_value = mock_response
+
+    api_key = 'invalid_api_key'
+    articles = get_guardian_articles(api_key, 'machine learning', '2023-01-01')
+
+    assert len(articles) == 0
+    assert mock_get.call_count == 1
+
+
+@patch('requests.get')
+def test_get_guardian_articles_empty_response(mock_get, mock_env_variables):
+
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {'response': {'results': []}}
+    mock_get.return_value = mock_response
+
+    api_key = os.getenv('GUARDIAN_API_KEY')
+    articles = get_guardian_articles(api_key, 'non_existing_query', '2023-01-01')
 
     assert len(articles) == 0
 
