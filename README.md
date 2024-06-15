@@ -19,10 +19,10 @@ This project is a proof of concept for a streaming data application that retriev
    cd streaming-data-project
    ```
 
-2. Createand activate your vritual environemnt:
+2. Create and activate your virtual environemnt:
     ```bash
    python -m venv venv
-   source venv/bin/activate
+   source venv/bin/activate # On Windows use `venv\Scripts\activate`
     ```
 
 3. Install the dependencies:

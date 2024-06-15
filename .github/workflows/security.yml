@@ -1,0 +1,31 @@
+name: Security Check
+
+on: [push, pull_request]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          pip install pip-audit bandit safety
+
+      - name: Run pip-audit
+        run: pip-audit
+
+      - name: Run bandit
+        run: bandit -r .
+
+      - name: Run safety
+        run: safety check
