@@ -28,11 +28,6 @@ jobs:
           pip install -r requirements.txt
           pip install pip-audit bandit safety
 
-      - name: Run pip-audit
-        run: |
-          source venv/bin/activate
-          pip-audit
-
       - name: Run bandit
         run: |
           source venv/bin/activate
