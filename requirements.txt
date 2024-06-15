@@ -5,3 +5,5 @@ pytest==7.3.1
 moto==4.1.7
 pip-audit
 safety
+flake8==6.0.0
+pip==23.3
