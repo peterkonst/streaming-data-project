@@ -19,10 +19,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
 
-      - name: Install dependencies
+      - name: Install dependencies and upgrade vulnerable packages
         run: |
           python -m venv venv
           source venv/bin/activate
+          pip install --upgrade pip
+          pip install --upgrade requests
           pip install -r requirements.txt
           pip install pip-audit bandit safety
 
