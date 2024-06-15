@@ -3,18 +3,20 @@ import json
 import requests
 import pytest
 from unittest.mock import patch, MagicMock
-from producer_consumer.producer import get_guardian_articles, publish_to_kinesis
+from producer_consumer.producer import get_guardian_articles
+from producer_consumer.producer import publish_to_kinesis
 import boto3
 from moto import mock_aws
-from botocore.exceptions import ClientError
 
 
 from dotenv import load_dotenv
 load_dotenv()
 
+
 @pytest.fixture
 def mock_env_variables(monkeypatch):
     monkeypatch.setenv('GUARDIAN_API_KEY', 'test_api_key')
+
 
 @patch('requests.get')
 def test_get_guardian_articles_success(mock_get, mock_env_variables):
@@ -43,7 +45,9 @@ def test_get_guardian_articles_success(mock_get, mock_env_variables):
     assert len(articles) == 2
     assert articles[0]['id'] == 'article-1'
     assert 'content_preview' in articles[0]
-    assert articles[0]['content_preview'] == 'This is the body of the article 1'
+    assert articles[0]['content_preview'] == """This is the body
+                                                of the article 1"""
+
 
 @patch('requests.get')
 def test_get_guardian_articles_failure(mock_get, mock_env_variables):
@@ -54,6 +58,7 @@ def test_get_guardian_articles_failure(mock_get, mock_env_variables):
     articles = get_guardian_articles(api_key, 'machine learning', '2023-01-01')
 
     assert len(articles) == 0
+
 
 @patch('requests.get')
 def test_get_guardian_articles_invalid_api_key(mock_get, mock_env_variables):
@@ -77,13 +82,15 @@ def test_get_guardian_articles_empty_response(mock_get, mock_env_variables):
     mock_get.return_value = mock_response
 
     api_key = os.getenv('GUARDIAN_API_KEY')
-    articles = get_guardian_articles(api_key, 'non_existing_query', '2023-01-01')
+    articles = get_guardian_articles(
+        api_key, 'non_existing_query', '2023-01-01')
 
     assert len(articles) == 0
 
+
 @mock_aws
 def test_publish_to_kinesis(mock_env_variables):
-    
+
     stream_name = 'test_stream'
     kinesis_client = boto3.client('kinesis', region_name='eu-west-2')
     kinesis_client.create_stream(StreamName=stream_name, ShardCount=1)
@@ -108,11 +115,11 @@ def test_publish_to_kinesis(mock_env_variables):
         ShardId=shard_id,
         ShardIteratorType='TRIM_HORIZON'
     )['ShardIterator']
-    records_response = kinesis_client.get_records(ShardIterator=shard_iterator, Limit=10)
+    records_response = kinesis_client.get_records(ShardIterator=shard_iterator,
+                                                  Limit=10)
 
     assert len(records_response['Records']) == 2
     record_data_1 = json.loads(records_response['Records'][0]['Data'])
     assert record_data_1['id'] == 'article-1'
     record_data_2 = json.loads(records_response['Records'][1]['Data'])
     assert record_data_2['id'] == 'article-2'
-

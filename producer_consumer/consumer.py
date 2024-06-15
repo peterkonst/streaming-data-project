@@ -14,21 +14,28 @@ logging.basicConfig(level=logging.INFO,
 
 def consume_from_kinesis(stream_name, max_records=float('inf')):
     """
-    This function consumes records from a Kinesis stream and logs the received records.
+    This function consumes records from a Kinesis stream and
+    logs the received records.
 
-    It continously fetches records from the specified Kinesis stream  and logs each received records until a specified maximum number of records is reached or there are no more records to fecth
+    It continously fetches records from the specified Kinesis stream
+    and logs each received records until a specified maximum number
+    of records is reached or there are no more records to fecth
 
     Args:
-        stream_name(str): The name of the Kinesis stream to consume records from. 
+        stream_name(str): The name of the Kinesis stream to
+        consume records from.
         max_records (int, optional): The maximum number of records to process.
-            Defaults to float ('inf'), which means there is no limit (for testing purposes)
-    
-    Returns: 
+            Defaults to float ('inf'),
+            which means there is no limit (for testing purposes)
+
+    Returns:
         None
-    
-    Raises: 
-        botocore.exceptions.ClientError: If an error occurs while fetching records from Kinesis
-        botocore.exceptions.BotoCoreError: If a low-level error occurs in the boto3 client.
+
+    Raises:
+        botocore.exceptions.ClientError:
+        If an error occurs while fetching records from Kinesis
+        botocore.exceptions.BotoCoreError:
+        If a low-level error occurs in the boto3 client.
 
     """
     kinesis_client = boto3.client('kinesis')
@@ -68,11 +75,11 @@ def consume_from_kinesis(stream_name, max_records=float('inf')):
             logging.info("Consumer interrupted. Exiting...")
             break
 
+
 def main():
     stream_name = 'guardian_content'
     consume_from_kinesis(stream_name)
 
+
 if __name__ == "__main__":
     main()
-
-
